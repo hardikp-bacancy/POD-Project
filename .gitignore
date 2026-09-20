@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Virtual environment
+.venv/
+
+# Local scratch/dev scripts (not part of the deliverable)
+.scratch/
+
+# Streamlit runtime artifacts
+.streamlit/
+*.log
+nohup.out
+
+# OS
+.DS_Store
