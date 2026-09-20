@@ -1,0 +1,40 @@
+from streamlit.testing.v1 import AppTest
+
+at = AppTest.from_file("../app.py", default_timeout=120)
+at.run()
+
+print("=== initial run ===")
+print("exceptions:", at.exception)
+print("sidebar sliders:", [s.label for s in at.sidebar.slider])
+print("title:", at.title[0].value if at.title else None)
+print("caption0:", at.caption[0].value if at.caption else None)
+assert not at.exception, "App threw an exception on initial load!"
+
+print("\n=== sending chat message: 'Suggest some chill songs for studying.' ===")
+at.chat_input[0].set_value("Suggest some chill songs for studying.").run()
+print("exceptions after chat:", at.exception)
+assert not at.exception, "App threw an exception after chat input!"
+
+# check chat messages rendered
+msgs = at.chat_message
+print("num chat_message blocks:", len(msgs))
+for m in msgs:
+    print(" role:", m.type)
+
+print("\n=== sending: 'Recommend songs similar to Blinding Lights.' ===")
+at.chat_input[0].set_value("Recommend songs similar to Blinding Lights.").run()
+print("exceptions:", at.exception)
+assert not at.exception
+
+print("\n=== sending empty-ish / edge: 'asdkjaslkdj not a real thing 12345' ===")
+at.chat_input[0].set_value("asdkjaslkdj not a real thing 12345").run()
+print("exceptions:", at.exception)
+assert not at.exception
+
+print("\n=== adjusting sidebar slider (n_recs) then sending message ===")
+at.sidebar.slider[0].set_value(3).run()
+at.chat_input[0].set_value("energetic workout songs").run()
+print("exceptions:", at.exception)
+assert not at.exception
+
+print("\nALL APPTEST CHECKS PASSED")
